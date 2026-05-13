@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist địa điểm & ăn uống</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #f6f6f4;
+    --bg3: #f0efeb;
+    --text: #1a1a18;
+    --text2: #6b6b67;
+    --text3: #a8a8a3;
+    --border: rgba(0,0,0,0.1);
+    --border2: rgba(0,0,0,0.18);
+    --green: #1D9E75;
+    --green-bg: #E1F5EE;
+    --green-text: #085041;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a;
+      --bg2: #252523;
+      --bg3: #2e2e2b;
+      --text: #f0efe8;
+      --text2: #a8a8a0;
+      --text3: #6b6b65;
+      --border: rgba(255,255,255,0.1);
+      --border2: rgba(255,255,255,0.18);
+      --green-bg: #04342C;
+      --green-text: #9FE1CB;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; background: var(--bg3); color: var(--text); min-height: 100vh; }
+  .page { max-width: 960px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+
+  /* Header */
+  .header { margin-bottom: 2rem; }
+  .header h1 { font-size: 22px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+  .header h1 .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); display: inline-block; }
+  .header p { font-size: 13px; color: var(--text2); margin-top: 4px; margin-left: 20px; }
+
+  /* GPS Bar */
+  .gps-bar { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 12px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .gps-bar .icon { color: var(--green); font-size: 18px; flex-shrink: 0; }
+  .gps-txt { flex: 1; font-size: 13px; color: var(--text2); min-width: 160px; }
+  .gps-btn { font-size: 12px; padding: 7px 16px; border-radius: 20px; border: 0.5px solid var(--border2); background: transparent; color: var(--text); cursor: pointer; white-space: nowrap; transition: background 0.15s; }
+  .gps-btn:hover { background: var(--bg2); }
+
+  /* Stats */
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1rem; }
+  .stat { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+  .stat-val { font-size: 26px; font-weight: 600; color: var(--text); line-height: 1; }
+  .stat-lbl { font-size: 12px; color: var(--text2); margin-top: 4px; }
+  .progress { height: 4px; background: var(--bg3); border-radius: 2px; margin-bottom: 1.25rem; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.4s ease; }
+
+  /* Toolbar */
+  .toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; }
+  .filter-btn { font-size: 12px; padding: 6px 14px; border-radius: 20px; border: 0.5px solid var(--border); background: transparent; color: var(--text2); cursor: pointer; transition: all 0.15s; }
+  .filter-btn.active { background: var(--text); color: var(--bg); border-color: transparent; }
+  .filter-btn:hover:not(.active) { background: var(--bg2); color: var(--text); }
+  .spacer { flex: 1; }
+  .add-btn { font-size: 13px; padding: 7px 18px; border-radius: 20px; border: 0.5px solid var(--border2); background: var(--green); color: #fff; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 500; transition: opacity 0.15s; }
+  .add-btn:hover { opacity: 0.88; }
+  .export-btn { font-size: 12px; padding: 7px 14px; border-radius: 20px; border: 0.5px solid var(--border); background: transparent; color: var(--text2); cursor: pointer; display: flex; align-items: center; gap: 5px; }
+  .export-btn:hover { background: var(--bg2); }
+
+  /* Table */
+  .table-wrap { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  th { font-size: 11px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; padding: 10px 12px; background: var(--bg2); border-bottom: 0.5px solid var(--border); text-align: left; }
+  td { padding: 9px 12px; border-bottom: 0.5px solid var(--border); vertical-align: middle; font-size: 13px; }
+  tr:last-child td { border-bottom: none; }
+  tr.visited td { background: rgba(29,158,117,0.07); }
+  tr:hover td { background: var(--bg2); }
+  tr.visited:hover td { background: rgba(29,158,117,0.12); }
+
+  .col-check { width: 44px; text-align: center; }
+  .col-name { width: 175px; }
+  .col-type { width: 110px; }
+  .col-src { width: 140px; }
+  .col-addr { }
+  .col-dist { width: 100px; }
+  .col-del { width: 40px; }
+
+  input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--green); cursor: pointer; }
+  .inline-input { width: 100%; border: none; background: transparent; font-size: 13px; color: var(--text); font-family: inherit; outline: none; }
+  .inline-input.struck { text-decoration: line-through; color: var(--text3); }
+  .inline-input::placeholder { color: var(--text3); }
+  select.inline-sel { width: 100%; border: none; background: transparent; font-size: 13px; color: var(--text); font-family: inherit; cursor: pointer; outline: none; }
+  .del-btn { background: none; border: none; cursor: pointer; color: var(--text3); padding: 4px 6px; border-radius: 4px; font-size: 16px; line-height: 1; transition: color 0.15s, background 0.15s; }
+  .del-btn:hover { color: #D85A30; background: #FAECE7; }
+
+  /* Distance badges */
+  .dist { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; }
+  .dist.near { color: var(--green); }
+  .dist.mid { color: #BA7517; }
+  .dist.far { color: #D85A30; }
+  .dist.none { color: var(--text3); }
+
+  /* Source badges */
+  .src-badge { font-size: 11px; padding: 3px 8px; border-radius: 12px; font-weight: 500; white-space: nowrap; }
+  .src-michelin { background: #FAECE7; color: #993C1D; }
+  .src-tiktok { background: #EEEDFE; color: #3C3489; }
+  .src-klook { background: #E1F5EE; color: #0F6E56; }
+  .src-google { background: #E6F1FB; color: #185FA5; }
+  .src-other { background: var(--bg2); color: var(--text2); }
+
+  .empty-msg { text-align: center; color: var(--text3); padding: 32px; font-size: 13px; }
+  .empty-msg i { font-size: 28px; display: block; margin-bottom: 8px; }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px); background: var(--text); color: var(--bg); font-size: 13px; padding: 10px 20px; border-radius: 20px; opacity: 0; transition: all 0.3s; z-index: 999; white-space: nowrap; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 640px) {
+    .col-src, .col-type { display: none; }
+    .col-name { width: 140px; }
+    .col-dist { width: 80px; }
+    .stats { grid-template-columns: repeat(3,1fr); }
+    .stat-val { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <h1><span class="dot"></span>Danh sách muốn đến</h1>
+    <p id="date-lbl"></p>
+  </div>
+
+  <div class="gps-bar">
+    <i class="ti ti-current-location icon"></i>
+    <span class="gps-txt" id="gps-status">Chưa lấy vị trí — nhấn nút để tính khoảng cách đến từng nơi</span>
+    <button class="gps-btn" onclick="getGPS()">
+      <i class="ti ti-gps" style="font-size:13px;vertical-align:-1px;margin-right:4px"></i>Lấy vị trí của tôi
+    </button>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val" id="s-total">0</div><div class="stat-lbl">Tổng địa điểm</div></div>
+    <div class="stat"><div class="stat-val" id="s-done">0</div><div class="stat-lbl">Đã đến ✓</div></div>
+    <div class="stat"><div class="stat-val" id="s-left">0</div><div class="stat-lbl">Còn lại</div></div>
+  </div>
+  <div class="progress"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+
+  <div class="toolbar">
+    <button class="filter-btn active" onclick="setFilter('all',this)">Tất cả</button>
+    <button class="filter-btn" onclick="setFilter('food',this)">🍜 Ăn uống</button>
+    <button class="filter-btn" onclick="setFilter('place',this)">📍 Địa điểm</button>
+    <button class="filter-btn" onclick="setFilter('todo',this)">Chưa đến</button>
+    <button class="filter-btn" onclick="setFilter('done',this)">Đã đến</button>
+    <div class="spacer"></div>
+    <button class="export-btn" onclick="exportCSV()"><i class="ti ti-download" style="font-size:14px"></i>Xuất CSV</button>
+    <button class="add-btn" onclick="addRow()"><i class="ti ti-plus" style="font-size:15px"></i>Thêm</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-check"><i class="ti ti-check"></i></th>
+          <th class="col-name">Tên địa điểm</th>
+          <th class="col-type">Loại</th>
+          <th class="col-src">Nguồn gợi ý</th>
+          <th class="col-addr">Địa chỉ</th>
+          <th class="col-dist">Khoảng cách</th>
+          <th class="col-del"></th>
+        </tr>
+      </thead>
+      <tbody id="tbl-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+document.getElementById('date-lbl').textContent = new Date().toLocaleDateString('vi-VN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+const STORAGE_KEY = 'travel_checklist_v1';
+let userLat = null, userLng = null;
+let filter = 'all';
+let nextId = 100;
+
+const DEFAULTS = [
+  {id:1,name:'Bún bò Huế Bà Tuyết',type:'food',src:'tiktok',addr:'74 Hàng Điếu, Hoàn Kiếm, Hà Nội',done:false},
+  {id:2,name:'Văn Miếu - Quốc Tử Giám',type:'place',src:'google',addr:'58 Quốc Tử Giám, Đống Đa, Hà Nội',done:true},
+  {id:3,name:'Chả cá Lã Vọng',type:'food',src:'michelin',addr:'14 Chả Cá, Hoàn Kiếm, Hà Nội',done:false},
+  {id:4,name:'Hồ Tây - phố Trịnh Công Sơn',type:'place',src:'google',addr:'Phố Trịnh Công Sơn, Tây Hồ, Hà Nội',done:false},
+  {id:5,name:'Egg Coffee Giảng',type:'food',src:'klook',addr:'39 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội',done:true},
+];
+
+const srcLabel = {michelin:'Michelin Guide',tiktok:'TikTok',klook:'Klook',google:'Google Maps',other:'Khác'};
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const data = JSON.parse(raw);
+      nextId = (data.nextId || 10) + 1;
+      return data.rows || DEFAULTS;
+    }
+  } catch(e) {}
+  return JSON.parse(JSON.stringify(DEFAULTS));
+}
+
+function save(rows) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({rows, nextId})); } catch(e) {}
+}
+
+let rows = load();
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function deg2rad(d) { return d * Math.PI / 180; }
+function calcDist(lat1,lng1,lat2,lng2) {
+  const R=6371, dLat=deg2rad(lat2-lat1), dLng=deg2rad(lng2-lng1);
+  const a=Math.sin(dLat/2)**2+Math.cos(deg2rad(lat1))*Math.cos(deg2rad(lat2))*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function fmtDist(km) { return km < 1 ? Math.round(km*1000)+'m' : km.toFixed(1)+'km'; }
+function distClass(km) { return km<2?'near':km<10?'mid':'far'; }
+function distIcon(cls) { return cls==='near'?'ti-walk':cls==='mid'?'ti-motorbike':'ti-car'; }
+
+async function geocode(addr) {
+  if (!addr || !addr.trim()) return null;
+  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addr)}&limit=1`;
+  try {
+    const res = await fetch(url, {headers:{'Accept-Language':'vi'}});
+    const data = await res.json();
+    if (data && data[0]) return {lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon)};
+  } catch(e) {}
+  return null;
+}
+
+function getGPS() {
+  const st = document.getElementById('gps-status');
+  st.textContent = 'Đang lấy vị trí...';
+  if (!navigator.geolocation) { st.textContent = 'Trình duyệt không hỗ trợ GPS'; return; }
+  navigator.geolocation.getCurrentPosition(pos => {
+    userLat = pos.coords.latitude;
+    userLng = pos.coords.longitude;
+    st.textContent = `📍 Vị trí: ${userLat.toFixed(4)}, ${userLng.toFixed(4)} — đang tính khoảng cách...`;
+    geocodeAll().then(() => {
+      st.textContent = `📍 Vị trí: ${userLat.toFixed(4)}, ${userLng.toFixed(4)} — khoảng cách đã cập nhật`;
+      renderTable();
+    });
+  }, () => { st.textContent = 'Không thể lấy vị trí. Hãy cho phép truy cập GPS trong trình duyệt.'; });
+}
+
+async function geocodeAll() {
+  for (const r of rows) {
+    if (!r.lat && r.addr) {
+      const coords = await geocode(r.addr);
+      if (coords) { r.lat = coords.lat; r.lng = coords.lng; }
+    }
+  }
+  save(rows);
+}
+
+function setFilter(f, btn) {
+  filter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+function addRow() {
+  rows.push({id: nextId++, name:'', type:'food', src:'google', addr:'', done:false, lat:null, lng:null});
+  save(rows);
+  renderTable();
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('.name-input');
+    if (inputs.length) inputs[inputs.length-1].focus();
+  }, 50);
+}
+
+function deleteRow(id) {
+  if (!confirm('Xóa địa điểm này?')) return;
+  rows = rows.filter(r => r.id !== id);
+  save(rows);
+  renderTable();
+  toast('Đã xóa');
+}
+
+function updateField(id, field, val) {
+  const r = rows.find(r => r.id === id);
+  if (!r) return;
+  r[field] = val;
+  if (field === 'addr') { r.lat = null; r.lng = null; }
+  save(rows);
+  updateStats();
+}
+
+function toggleDone(id) {
+  const r = rows.find(r => r.id === id);
+  if (r) { r.done = !r.done; save(rows); renderTable(); toast(r.done ? '✓ Đã đánh dấu đến rồi!' : 'Bỏ đánh dấu'); }
+}
+
+function geocodeRow(id) {
+  const r = rows.find(r => r.id === id);
+  if (!r || !r.addr) return;
+  const cell = document.getElementById('dist-'+id);
+  if (cell) cell.innerHTML = '<span style="color:var(--text3);font-size:12px">Đang tìm...</span>';
+  geocode(r.addr).then(coords => {
+    if (coords) {
+      r.lat = coords.lat; r.lng = coords.lng;
+      save(rows);
+      renderTable();
+      toast('Đã tra tọa độ thành công');
+    } else {
+      if (cell) cell.innerHTML = '<span style="color:#D85A30;font-size:12px">Không tìm thấy</span>';
+    }
+  });
+}
+
+function updateStats() {
+  const total = rows.length, done = rows.filter(r => r.done).length;
+  document.getElementById('s-total').textContent = total;
+  document.getElementById('s-done').textContent = done;
+  document.getElementById('s-left').textContent = total - done;
+  document.getElementById('prog').style.width = (total ? Math.round(done/total*100) : 0) + '%';
+}
+
+function exportCSV() {
+  const header = ['Tên','Loại','Nguồn gợi ý','Địa chỉ','Đã đến'];
+  const body = rows.map(r => [r.name, r.type==='food'?'Ăn uống':'Địa điểm', srcLabel[r.src]||r.src, r.addr, r.done?'Rồi':'Chưa']);
+  const csv = [header, ...body].map(row => row.map(c => `"${(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'checklist-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  toast('Đã xuất CSV');
+}
+
+function renderTable() {
+  let visible = rows;
+  if (filter==='food') visible = rows.filter(r => r.type==='food');
+  else if (filter==='place') visible = rows.filter(r => r.type==='place');
+  else if (filter==='todo') visible = rows.filter(r => !r.done);
+  else if (filter==='done') visible = rows.filter(r => r.done);
+
+  const tbody = document.getElementById('tbl-body');
+
+  if (!visible.length) {
+    tbody.innerHTML = `<tr><td colspan="7" class="empty-msg"><i class="ti ti-mood-empty"></i>Chưa có địa điểm nào — nhấn "+ Thêm" để bắt đầu</td></tr>`;
+    updateStats(); return;
+  }
+
+  tbody.innerHTML = visible.map(r => {
+    let distHtml = '';
+    if (userLat !== null && r.lat) {
+      const km = calcDist(userLat, userLng, r.lat, r.lng);
+      const cls = distClass(km);
+      distHtml = `<span class="dist ${cls}"><i class="ti ${distIcon(cls)}" style="font-size:13px"></i>${fmtDist(km)}</span>`;
+    } else if (r.addr && r.addr.trim()) {
+      distHtml = `<span class="dist none" title="Click để tra tọa độ" style="cursor:pointer" onclick="geocodeRow(${r.id})"><i class="ti ti-map-search" style="font-size:13px"></i>Tra địa chỉ</span>`;
+    }
+
+    const srcCls = 'src-'+(r.src||'other');
+
+    return `<tr class="${r.done?'visited':''}" id="row-${r.id}">
+      <td class="col-check" style="text-align:center">
+        <input type="checkbox" ${r.done?'checked':''} onchange="toggleDone(${r.id})" aria-label="Đánh dấu đã đến">
+      </td>
+      <td class="col-name">
+        <input class="inline-input name-input ${r.done?'struck':''}" value="${esc(r.name)}" placeholder="Tên địa điểm..."
+          oninput="updateField(${r.id},'name',this.value)" onblur="renderTable()">
+      </td>
+      <td class="col-type">
+        <select class="inline-sel" onchange="updateField(${r.id},'type',this.value)" aria-label="Loại">
+          <option value="food" ${r.type==='food'?'selected':''}>🍜 Ăn uống</option>
+          <option value="place" ${r.type==='place'?'selected':''}>📍 Địa điểm</option>
+        </select>
+      </td>
+      <td class="col-src">
+        <select class="inline-sel" onchange="updateField(${r.id},'src',this.value);renderTable()">
+          <option value="michelin" ${r.src==='michelin'?'selected':''}>Michelin Guide</option>
+          <option value="tiktok" ${r.src==='tiktok'?'selected':''}>TikTok</option>
+          <option value="klook" ${r.src==='klook'?'selected':''}>Klook</option>
+          <option value="google" ${r.src==='google'?'selected':''}>Google Maps</option>
+          <option value="other" ${r.src==='other'?'selected':''}>Khác</option>
+        </select>
+      </td>
+      <td class="col-addr">
+        <input class="inline-input" value="${esc(r.addr)}" placeholder="Nhập địa chỉ..."
+          oninput="updateField(${r.id},'addr',this.value)" aria-label="Địa chỉ">
+      </td>
+      <td class="col-dist" id="dist-${r.id}">${distHtml}</td>
+      <td class="col-del">
+        <button class="del-btn" onclick="deleteRow(${r.id})" title="Xóa">
+          <i class="ti ti-trash"></i>
+        </button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  updateStats();
+}
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+renderTable();
+</script>
+</body>
+</html>
