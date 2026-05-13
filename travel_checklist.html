@@ -93,9 +93,22 @@
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--text);color:var(--bg);font-size:13px;padding:10px 20px;border-radius:20px;opacity:0;transition:all 0.3s;z-index:999;white-space:nowrap;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
   @media(max-width:640px){
-    .col-src,.col-type{display:none;}
-    .col-name{width:140px;}.col-dist{width:80px;}
-    .stat-val{font-size:20px;}
+    .col-src, .col-type { 
+        display: table-cell !important; 
+    } 
+    table { 
+        min-width: 800px; 
+    }
+    .stat-val { font-size: 20px; }
+    .col-name { width: 140px; }
+    .col-dist { width: 90px; }
+    .table-wrap::-webkit-scrollbar {
+        height: 4px;
+    }
+    .table-wrap::-webkit-scrollbar-thumb {
+        background: var(--border2);
+        border-radius: 10px;
+    }
   }
 </style>
 </head>
