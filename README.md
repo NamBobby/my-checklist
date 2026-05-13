@@ -2,7 +2,7 @@
 
 Danh sách cá nhân những nơi muốn đến và món muốn thử — có thể đánh dấu đã đi chưa, ghi nguồn gợi ý, địa chỉ và tính khoảng cách từ vị trí hiện tại.
 
-🔗 **[Mở checklist →]([https://username.github.io/my-checklist](https://nambobby.github.io/my-checklist/travel_checklist.html))**
+🔗 **[Mở checklist →]([https://nambobby.github.io/my-checklist/travel_checklist.html])**
 
 ---
 
