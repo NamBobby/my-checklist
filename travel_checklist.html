@@ -19,7 +19,7 @@
   }}
   *{box-sizing:border-box;margin:0;padding:0;}
   body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(--bg3);color:var(--text);min-height:100vh;}
-  .page{max-width:960px;margin:0 auto;padding:2rem 1rem 4rem;}
+  .page{max-width:1140px;margin:0 auto;padding:2rem 1rem 4rem;}
   .header{margin-bottom:1.5rem;}
   .header h1{font-size:22px;font-weight:600;display:flex;align-items:center;gap:10px;}
   .dot{width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block;}
@@ -51,7 +51,7 @@
   .progress-fill{height:100%;background:var(--green);border-radius:2px;transition:width 0.4s ease;}
 
   /* Toolbar */
-  .toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:1rem;}
+  .toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:0.6rem;}
   .filter-btn{font-size:12px;padding:6px 14px;border-radius:20px;border:0.5px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;transition:all 0.15s;}
   .filter-btn.active{background:var(--text);color:var(--bg);border-color:transparent;}
   .filter-btn:hover:not(.active){background:var(--bg2);color:var(--text);}
@@ -61,8 +61,18 @@
   .export-btn{font-size:12px;padding:7px 14px;border-radius:20px;border:0.5px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:5px;}
   .export-btn:hover{background:var(--bg2);}
 
+  /* Search + price filter row */
+  .filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:1rem;}
+  .search-wrap{position:relative;flex:1;min-width:180px;}
+  .search-wrap i{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--text3);pointer-events:none;}
+  .search-input{width:100%;padding:7px 10px 7px 32px;border-radius:20px;border:0.5px solid var(--border2);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:border-color 0.15s;}
+  .search-input:focus{border-color:var(--green);}
+  .search-input::placeholder{color:var(--text3);}
+  .price-filter-sel{font-size:12px;padding:7px 14px;border-radius:20px;border:0.5px solid var(--border2);background:var(--bg);color:var(--text);font-family:inherit;cursor:pointer;outline:none;}
+  .price-filter-sel:focus{border-color:var(--green);}
+
   /* Table */
-  .table-wrap{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);overflow-x: auto;-webkit-overflow-scrolling: touch;}
+  .table-wrap{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);overflow-x:auto;-webkit-overflow-scrolling:touch;}
   table{width:100%;border-collapse:collapse;table-layout:fixed;}
   th{font-size:11px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;padding:10px 12px;background:var(--bg2);border-bottom:0.5px solid var(--border);text-align:left;}
   td{padding:9px 12px;border-bottom:0.5px solid var(--border);vertical-align:middle;font-size:13px;}
@@ -71,10 +81,12 @@
   tr:hover td{background:var(--bg2);}
   tr.visited:hover td{background:rgba(29,158,117,0.12);}
   .col-check{width:44px;text-align:center;}
-  .col-name{width:175px;}
-  .col-type{width:110px;}
-  .col-src{width:140px;}
-  .col-dist{width:100px;}
+  .col-name{width:155px;}
+  .col-type{width:105px;}
+  .col-price{width:130px;}
+  .col-src{width:130px;}
+  .col-dist{width:95px;}
+  .col-note{width:160px;}
   .col-del{width:40px;}
   input[type=checkbox]{width:17px;height:17px;accent-color:var(--green);cursor:pointer;}
   .inline-input{width:100%;border:none;background:transparent;font-size:13px;color:var(--text);font-family:inherit;outline:none;}
@@ -88,34 +100,39 @@
   .dist.mid{color:#BA7517;}
   .dist.far{color:#D85A30;}
   .dist.none{color:var(--text3);}
+
+  /* Price badge */
+  .price-badge{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px;white-space:nowrap;}
+  .price-badge.p1{background:#e6f9f2;color:#1D9E75;}
+  .price-badge.p2{background:#fff8e6;color:#BA7517;}
+  .price-badge.p3{background:#fdeee8;color:#D85A30;}
+  .price-badge.p4{background:#f3e8fd;color:#7c3aed;}
+  @media(prefers-color-scheme:dark){
+    .price-badge.p1{background:#0d3326;color:#4ecfa0;}
+    .price-badge.p2{background:#332500;color:#f5b84a;}
+    .price-badge.p3{background:#3d1a10;color:#f5826a;}
+    .price-badge.p4{background:#2a1040;color:#c084fc;}
+  }
+
   .empty-msg{text-align:center;color:var(--text3);padding:32px;font-size:13px;}
   .empty-msg i{font-size:28px;display:block;margin-bottom:8px;}
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--text);color:var(--bg);font-size:13px;padding:10px 20px;border-radius:20px;opacity:0;transition:all 0.3s;z-index:999;white-space:nowrap;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
   @media(max-width:640px){
-    .col-src, .col-type { 
-        display: table-cell !important; 
-    } 
-    table { 
-        min-width: 800px; 
-    }
-    .stat-val { font-size: 20px; }
-    .col-name { width: 140px; }
-    .col-dist { width: 90px; }
-    .table-wrap::-webkit-scrollbar {
-        height: 4px;
-    }
-    .table-wrap::-webkit-scrollbar-thumb {
-        background: var(--border2);
-        border-radius: 10px;
-    }
+    table{min-width:900px;}
+    .stat-val{font-size:20px;}
+    .col-name{width:130px;}
+    .col-note{width:130px;}
+    .table-wrap::-webkit-scrollbar{height:4px;}
+    .table-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px;}
   }
 </style>
 </head>
 <body>
 <div class="page">
   <div class="header">
-    <h1><span class="dot"></span>Danh sách muốn đến</h1>
+    <h1><span class="dot"></span>Danh sách muốn đến của Bobby</h1>
     <p id="date-lbl"></p>
   </div>
 
@@ -140,6 +157,7 @@
   </div>
   <div class="progress"><div class="progress-fill" id="prog" style="width:0%"></div></div>
 
+  <!-- Type / status filter -->
   <div class="toolbar">
     <button class="filter-btn active" onclick="setFilter('all',this)">Tất cả</button>
     <button class="filter-btn" onclick="setFilter('food',this)">🍜 Ăn uống</button>
@@ -151,15 +169,32 @@
     <button class="add-btn" onclick="addRow()"><i class="ti ti-plus" style="font-size:15px"></i>Thêm</button>
   </div>
 
+  <!-- Search + price filter -->
+  <div class="filter-row">
+    <div class="search-wrap">
+      <i class="ti ti-search"></i>
+      <input class="search-input" id="search-input" type="text" placeholder="Tìm tên địa điểm hoặc địa chỉ..." oninput="renderTable()">
+    </div>
+    <select class="price-filter-sel" id="price-filter" onchange="renderTable()">
+      <option value="">💰 Mọi mức giá</option>
+      <option value="p1">🟢 Dưới 100k</option>
+      <option value="p2">🟡 100k – 300k</option>
+      <option value="p3">🟠 300k – 700k</option>
+      <option value="p4">🔴 Trên 700k</option>
+    </select>
+  </div>
+
   <div class="table-wrap">
     <table>
       <thead><tr>
         <th class="col-check"><i class="ti ti-check"></i></th>
         <th class="col-name">Tên địa điểm</th>
         <th class="col-type">Loại</th>
+        <th class="col-price">Khoảng giá</th>
         <th class="col-src">Nguồn gợi ý</th>
         <th class="col-addr">Địa chỉ</th>
         <th class="col-dist">Khoảng cách</th>
+        <th class="col-note">Ghi chú</th>
         <th class="col-del"></th>
       </tr></thead>
       <tbody id="tbl-body"></tbody>
@@ -171,7 +206,7 @@
 <script>
 document.getElementById('date-lbl').textContent = new Date().toLocaleDateString('vi-VN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
-// ── Config (Hardcoded) ───────────────────────────────────
+// ── Config ───────────────────────────────────────────────
 const binKey = '$2a$10$F/ihkvk4.BRrNOw8gtfOzOVGvhj3FYVIEQD825VPsTut92qafzB2i';
 const binId  = '6a0430f1adc21f119a928366';
 const LOC_KEY = 'travel_checklist_v1';
@@ -187,7 +222,6 @@ function setSaveInd(msg, active) {
 async function loadFromBin() {
   document.getElementById('sync-dot').className = 'sync-dot loading';
   document.getElementById('sync-label').textContent = 'Đang đồng bộ dữ liệu...';
-  
   try {
     const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
       headers: { 'X-Master-Key': binKey, 'X-Bin-Meta': 'false' }
@@ -198,7 +232,6 @@ async function loadFromBin() {
     nextId = (data.nextId || 10) + 1;
     localStorage.setItem(LOC_KEY, JSON.stringify({rows, nextId}));
     renderTable();
-    
     document.getElementById('sync-dot').className = 'sync-dot ok';
     document.getElementById('sync-label').textContent = 'Đã đồng bộ đám mây ✓';
   } catch(e) {
@@ -213,10 +246,7 @@ async function saveToBin() {
   try {
     const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': binKey
-      },
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': binKey },
       body: JSON.stringify({rows, nextId})
     });
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -234,6 +264,14 @@ let userLat = null, userLng = null;
 
 const srcLabel = {michelin:'Michelin Guide',tiktok:'TikTok',klook:'Klook',google:'Google Maps',other:'Khác'};
 
+const priceMeta = {
+  '':   {label:'—',            cls:'',   icon:''},
+  'p1': {label:'Dưới 100k',   cls:'p1', icon:'🟢'},
+  'p2': {label:'100k – 300k', cls:'p2', icon:'🟡'},
+  'p3': {label:'300k – 700k', cls:'p3', icon:'🟠'},
+  'p4': {label:'Trên 700k',   cls:'p4', icon:'🔴'},
+};
+
 function localLoad() {
   try {
     const d = JSON.parse(localStorage.getItem(LOC_KEY) || 'null');
@@ -246,7 +284,7 @@ function save() {
   localStorage.setItem(LOC_KEY, JSON.stringify({rows, nextId}));
   clearTimeout(saveTimer);
   setSaveInd('…', false);
-  saveTimer = setTimeout(saveToBin, 1200); // Tự động lưu lên JSONBin sau 1.2s
+  saveTimer = setTimeout(saveToBin, 1200);
 }
 
 rows = localLoad();
@@ -313,7 +351,7 @@ function setFilter(f,btn) {
 }
 
 function addRow() {
-  rows.push({id:nextId++,name:'',type:'food',src:'google',addr:'',done:false,lat:null,lng:null});
+  rows.push({id:nextId++,name:'',type:'food',price:'',src:'google',addr:'',note:'',done:false,lat:null,lng:null});
   save(); renderTable();
   setTimeout(()=>{const i=document.querySelectorAll('.name-input');if(i.length)i[i.length-1].focus();},50);
 }
@@ -344,8 +382,16 @@ function updateStats() {
 }
 
 function exportCSV() {
-  const h=['Tên','Loại','Nguồn gợi ý','Địa chỉ','Đã đến'];
-  const b=rows.map(r=>[r.name,r.type==='food'?'Ăn uống':'Địa điểm',srcLabel[r.src]||r.src,r.addr,r.done?'Rồi':'Chưa']);
+  const h=['Tên','Loại','Khoảng giá','Nguồn gợi ý','Địa chỉ','Ghi chú','Đã đến'];
+  const b=rows.map(r=>[
+    r.name,
+    r.type==='food'?'Ăn uống':'Địa điểm',
+    priceMeta[r.price||'']?.label||'',
+    srcLabel[r.src]||r.src,
+    r.addr,
+    r.note||'',
+    r.done?'Rồi':'Chưa'
+  ]);
   const csv=[h,...b].map(row=>row.map(c=>`"${(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
@@ -354,19 +400,38 @@ function exportCSV() {
 }
 
 function renderTable() {
-  let visible=rows;
-  if(filter==='food') visible=rows.filter(r=>r.type==='food');
-  else if(filter==='place') visible=rows.filter(r=>r.type==='place');
-  else if(filter==='todo') visible=rows.filter(r=>!r.done);
-  else if(filter==='done') visible=rows.filter(r=>r.done);
+  const searchQ = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
+  const priceQ  = document.getElementById('price-filter')?.value || '';
 
-  const tbody=document.getElementById('tbl-body');
+  let visible = rows;
+
+  // Type / status filter
+  if(filter==='food')  visible = visible.filter(r=>r.type==='food');
+  else if(filter==='place') visible = visible.filter(r=>r.type==='place');
+  else if(filter==='todo')  visible = visible.filter(r=>!r.done);
+  else if(filter==='done')  visible = visible.filter(r=>r.done);
+
+  // Search filter
+  if(searchQ) {
+    visible = visible.filter(r =>
+      (r.name||'').toLowerCase().includes(searchQ) ||
+      (r.addr||'').toLowerCase().includes(searchQ)
+    );
+  }
+
+  // Price filter
+  if(priceQ) {
+    visible = visible.filter(r => (r.price||'') === priceQ);
+  }
+
+  const tbody = document.getElementById('tbl-body');
   if(!visible.length){
-    tbody.innerHTML=`<tr><td colspan="7" class="empty-msg"><i class="ti ti-mood-empty"></i>Chưa có địa điểm nào — nhấn "+ Thêm" để bắt đầu</td></tr>`;
+    tbody.innerHTML=`<tr><td colspan="9" class="empty-msg"><i class="ti ti-mood-empty"></i>Không tìm thấy địa điểm nào</td></tr>`;
     updateStats(); return;
   }
 
-  tbody.innerHTML=visible.map(r=>{
+  tbody.innerHTML = visible.map(r => {
+    // Distance cell
     let dH='';
     if(userLat!==null&&r.lat){
       const k=calcDist(userLat,userLng,r.lat,r.lng),c=distClass(k);
@@ -374,26 +439,43 @@ function renderTable() {
     } else if(r.addr&&r.addr.trim()){
       dH=`<span class="dist none" style="cursor:pointer" onclick="geocodeRow(${r.id})"><i class="ti ti-map-search" style="font-size:13px"></i>Tra địa chỉ</span>`;
     }
+
+    // Price cell
+    const pm = priceMeta[r.price||''] || priceMeta[''];
+    const priceBadge = pm.cls
+      ? `<span class="price-badge ${pm.cls}">${pm.icon} ${pm.label}</span>`
+      : `<span style="color:var(--text3);font-size:12px">—</span>`;
+
     return `<tr class="${r.done?'visited':''}" id="row-${r.id}">
       <td class="col-check" style="text-align:center"><input type="checkbox" ${r.done?'checked':''} onchange="toggleDone(${r.id})"></td>
       <td class="col-name"><input class="inline-input name-input ${r.done?'struck':''}" value="${esc(r.name)}" placeholder="Tên địa điểm..." oninput="updateField(${r.id},'name',this.value)" onblur="renderTable()"></td>
       <td class="col-type">
         <select class="inline-sel" onchange="updateField(${r.id},'type',this.value)">
-          <option value="food" ${r.type==='food'?'selected':''}>🍜 Ăn uống</option>
+          <option value="food"  ${r.type==='food' ?'selected':''}>🍜 Ăn uống</option>
           <option value="place" ${r.type==='place'?'selected':''}>📍 Địa điểm</option>
+        </select>
+      </td>
+      <td class="col-price">
+        <select class="inline-sel" onchange="updateField(${r.id},'price',this.value);renderTable()">
+          <option value=""  ${(r.price||'')=== ''  ?'selected':''}>— Chọn mức giá</option>
+          <option value="p1" ${r.price==='p1'?'selected':''}>🟢 Dưới 100k</option>
+          <option value="p2" ${r.price==='p2'?'selected':''}>🟡 100k – 300k</option>
+          <option value="p3" ${r.price==='p3'?'selected':''}>🟠 300k – 700k</option>
+          <option value="p4" ${r.price==='p4'?'selected':''}>🔴 Trên 700k</option>
         </select>
       </td>
       <td class="col-src">
         <select class="inline-sel" onchange="updateField(${r.id},'src',this.value);renderTable()">
           <option value="michelin" ${r.src==='michelin'?'selected':''}>Michelin Guide</option>
-          <option value="tiktok" ${r.src==='tiktok'?'selected':''}>TikTok</option>
-          <option value="klook" ${r.src==='klook'?'selected':''}>Klook</option>
-          <option value="google" ${r.src==='google'?'selected':''}>Google Maps</option>
-          <option value="other" ${r.src==='other'?'selected':''}>Khác</option>
+          <option value="tiktok"   ${r.src==='tiktok'  ?'selected':''}>TikTok</option>
+          <option value="klook"    ${r.src==='klook'   ?'selected':''}>Klook</option>
+          <option value="google"   ${r.src==='google'  ?'selected':''}>Google Maps</option>
+          <option value="other"    ${r.src==='other'   ?'selected':''}>Khác</option>
         </select>
       </td>
       <td class="col-addr"><input class="inline-input" value="${esc(r.addr)}" placeholder="Nhập địa chỉ..." oninput="updateField(${r.id},'addr',this.value)"></td>
       <td class="col-dist" id="dist-${r.id}">${dH}</td>
+      <td class="col-note"><input class="inline-input" value="${esc(r.note||'')}" placeholder="Ghi chú..." oninput="updateField(${r.id},'note',this.value)"></td>
       <td class="col-del"><button class="del-btn" onclick="deleteRow(${r.id})"><i class="ti ti-trash"></i></button></td>
     </tr>`;
   }).join('');
@@ -402,7 +484,7 @@ function renderTable() {
 
 // ── Init ─────────────────────────────────────────────────
 renderTable();
-loadFromBin(); // Tự động kéo dữ liệu từ đám mây ngay khi mở trang
+loadFromBin();
 </script>
 </body>
 </html>
