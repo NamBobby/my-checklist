@@ -1,490 +1,1174 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Checklist địa điểm & ăn uống</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
-<style>
-  :root {
-    --bg:#ffffff;--bg2:#f6f6f4;--bg3:#f0efeb;
-    --text:#1a1a18;--text2:#6b6b67;--text3:#a8a8a3;
-    --border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.18);
-    --green:#1D9E75;--radius:10px;
-  }
-  @media(prefers-color-scheme:dark){:root{
-    --bg:#1c1c1a;--bg2:#252523;--bg3:#2e2e2b;
-    --text:#f0efe8;--text2:#a8a8a0;--text3:#6b6b65;
-    --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.18);
-  }}
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(--bg3);color:var(--text);min-height:100vh;}
-  .page{max-width:1140px;margin:0 auto;padding:2rem 1rem 4rem;}
-  .header{margin-bottom:1.5rem;}
-  .header h1{font-size:22px;font-weight:600;display:flex;align-items:center;gap:10px;}
-  .dot{width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block;}
-  .header p{font-size:13px;color:var(--text2);margin-top:4px;margin-left:20px;}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checklist địa điểm & ăn uống</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css"
+    />
+    <style>
+      :root {
+        --bg: #ffffff;
+        --bg2: #f6f6f4;
+        --bg3: #f0efeb;
+        --text: #1a1a18;
+        --text2: #6b6b67;
+        --text3: #a8a8a3;
+        --border: rgba(0, 0, 0, 0.1);
+        --border2: rgba(0, 0, 0, 0.18);
+        --green: #1d9e75;
+        --radius: 10px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #1c1c1a;
+          --bg2: #252523;
+          --bg3: #2e2e2b;
+          --text: #f0efe8;
+          --text2: #a8a8a0;
+          --text3: #6b6b65;
+          --border: rgba(255, 255, 255, 0.1);
+          --border2: rgba(255, 255, 255, 0.18);
+        }
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+        background: var(--bg3);
+        color: var(--text);
+        min-height: 100vh;
+      }
+      .page {
+        max-width: 1140px;
+        margin: 0 auto;
+        padding: 2rem 1rem 4rem;
+      }
+      .header {
+        margin-bottom: 1.5rem;
+      }
+      .header h1 {
+        font-size: 22px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--green);
+        display: inline-block;
+      }
+      .header p {
+        font-size: 13px;
+        color: var(--text2);
+        margin-top: 4px;
+        margin-left: 20px;
+      }
 
-  /* Sync Panel */
-  .sync-panel{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:1rem;display:flex;align-items:center;gap:8px;}
-  .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--text3);display:inline-block;flex-shrink:0;}
-  .sync-dot.ok{background:var(--green);}
-  .sync-dot.err{background:#D85A30;}
-  .sync-dot.loading{background:#BA7517;}
-  .sync-lbl{font-size:13px;color:var(--text2);}
-  .save-ind{font-size:11px;color:var(--text3);margin-left:auto;}
-  .save-ind.active{color:var(--green);}
+      /* Sync Panel */
+      .sync-panel {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sync-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--text3);
+        display: inline-block;
+        flex-shrink: 0;
+      }
+      .sync-dot.ok {
+        background: var(--green);
+      }
+      .sync-dot.err {
+        background: #d85a30;
+      }
+      .sync-dot.loading {
+        background: #ba7517;
+      }
+      .sync-lbl {
+        font-size: 13px;
+        color: var(--text2);
+      }
+      .save-ind {
+        font-size: 11px;
+        color: var(--text3);
+        margin-left: auto;
+      }
+      .save-ind.active {
+        color: var(--green);
+      }
 
-  /* GPS */
-  .gps-bar{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:1rem;flex-wrap:wrap;}
-  .gps-bar .icon{color:var(--green);font-size:18px;flex-shrink:0;}
-  .gps-txt{flex:1;font-size:13px;color:var(--text2);min-width:160px;}
-  .gps-btn{font-size:12px;padding:7px 16px;border-radius:20px;border:0.5px solid var(--border2);background:transparent;color:var(--text);cursor:pointer;white-space:nowrap;}
-  .gps-btn:hover{background:var(--bg2);}
+      /* GPS */
+      .gps-bar {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      .gps-bar .icon {
+        color: var(--green);
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .gps-txt {
+        flex: 1;
+        font-size: 13px;
+        color: var(--text2);
+        min-width: 160px;
+      }
+      .gps-btn {
+        font-size: 12px;
+        padding: 7px 16px;
+        border-radius: 20px;
+        border: 0.5px solid var(--border2);
+        background: transparent;
+        color: var(--text);
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .gps-btn:hover {
+        background: var(--bg2);
+      }
 
-  /* Stats */
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem;}
-  .stat{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;}
-  .stat-val{font-size:26px;font-weight:600;line-height:1;}
-  .stat-lbl{font-size:12px;color:var(--text2);margin-top:4px;}
-  .progress{height:4px;background:var(--bg3);border-radius:2px;margin-bottom:1.25rem;overflow:hidden;}
-  .progress-fill{height:100%;background:var(--green);border-radius:2px;transition:width 0.4s ease;}
+      /* Stats */
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 1rem;
+      }
+      .stat {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+      }
+      .stat-val {
+        font-size: 26px;
+        font-weight: 600;
+        line-height: 1;
+      }
+      .stat-lbl {
+        font-size: 12px;
+        color: var(--text2);
+        margin-top: 4px;
+      }
+      .progress {
+        height: 4px;
+        background: var(--bg3);
+        border-radius: 2px;
+        margin-bottom: 1.25rem;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--green);
+        border-radius: 2px;
+        transition: width 0.4s ease;
+      }
 
-  /* Toolbar */
-  .toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:0.6rem;}
-  .filter-btn{font-size:12px;padding:6px 14px;border-radius:20px;border:0.5px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;transition:all 0.15s;}
-  .filter-btn.active{background:var(--text);color:var(--bg);border-color:transparent;}
-  .filter-btn:hover:not(.active){background:var(--bg2);color:var(--text);}
-  .spacer{flex:1;}
-  .add-btn{font-size:13px;padding:7px 18px;border-radius:20px;border:0.5px solid var(--border2);background:var(--green);color:#fff;cursor:pointer;display:flex;align-items:center;gap:6px;font-weight:500;}
-  .add-btn:hover{opacity:0.88;}
-  .export-btn{font-size:12px;padding:7px 14px;border-radius:20px;border:0.5px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:5px;}
-  .export-btn:hover{background:var(--bg2);}
+      /* Toolbar */
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 0.6rem;
+      }
+      .filter-btn {
+        font-size: 12px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        border: 0.5px solid var(--border);
+        background: transparent;
+        color: var(--text2);
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .filter-btn.active {
+        background: var(--text);
+        color: var(--bg);
+        border-color: transparent;
+      }
+      .filter-btn:hover:not(.active) {
+        background: var(--bg2);
+        color: var(--text);
+      }
+      .spacer {
+        flex: 1;
+      }
+      .add-btn {
+        font-size: 13px;
+        padding: 7px 18px;
+        border-radius: 20px;
+        border: 0.5px solid var(--border2);
+        background: var(--green);
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 500;
+      }
+      .add-btn:hover {
+        opacity: 0.88;
+      }
+      .export-btn {
+        font-size: 12px;
+        padding: 7px 14px;
+        border-radius: 20px;
+        border: 0.5px solid var(--border);
+        background: transparent;
+        color: var(--text2);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .export-btn:hover {
+        background: var(--bg2);
+      }
 
-  /* Search + price filter row */
-  .filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:1rem;}
-  .search-wrap{position:relative;flex:1;min-width:180px;}
-  .search-wrap i{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--text3);pointer-events:none;}
-  .search-input{width:100%;padding:7px 10px 7px 32px;border-radius:20px;border:0.5px solid var(--border2);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:border-color 0.15s;}
-  .search-input:focus{border-color:var(--green);}
-  .search-input::placeholder{color:var(--text3);}
-  .price-filter-sel{font-size:12px;padding:7px 14px;border-radius:20px;border:0.5px solid var(--border2);background:var(--bg);color:var(--text);font-family:inherit;cursor:pointer;outline:none;}
-  .price-filter-sel:focus{border-color:var(--green);}
+      /* Search + price filter row */
+      .filter-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+      .search-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 180px;
+      }
+      .search-wrap i {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 15px;
+        color: var(--text3);
+        pointer-events: none;
+      }
+      .search-input {
+        width: 100%;
+        padding: 7px 10px 7px 32px;
+        border-radius: 20px;
+        border: 0.5px solid var(--border2);
+        background: var(--bg);
+        color: var(--text);
+        font-size: 13px;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      .search-input:focus {
+        border-color: var(--green);
+      }
+      .search-input::placeholder {
+        color: var(--text3);
+      }
+      .price-filter-sel {
+        font-size: 12px;
+        padding: 7px 14px;
+        border-radius: 20px;
+        border: 0.5px solid var(--border2);
+        background: var(--bg);
+        color: var(--text);
+        font-family: inherit;
+        cursor: pointer;
+        outline: none;
+      }
+      .price-filter-sel:focus {
+        border-color: var(--green);
+      }
 
-  /* Table */
-  .table-wrap{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  table{width:100%;border-collapse:collapse;table-layout:fixed;}
-  th{font-size:11px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;padding:10px 12px;background:var(--bg2);border-bottom:0.5px solid var(--border);text-align:left;}
-  td{padding:9px 12px;border-bottom:0.5px solid var(--border);vertical-align:middle;font-size:13px;}
-  tr:last-child td{border-bottom:none;}
-  tr.visited td{background:rgba(29,158,117,0.07);}
-  tr:hover td{background:var(--bg2);}
-  tr.visited:hover td{background:rgba(29,158,117,0.12);}
-  .col-check{width:44px;text-align:center;}
-  .col-name{width:155px;}
-  .col-type{width:105px;}
-  .col-price{width:130px;}
-  .col-src{width:130px;}
-  .col-dist{width:95px;}
-  .col-note{width:160px;}
-  .col-del{width:40px;}
-  input[type=checkbox]{width:17px;height:17px;accent-color:var(--green);cursor:pointer;}
-  .inline-input{width:100%;border:none;background:transparent;font-size:13px;color:var(--text);font-family:inherit;outline:none;}
-  .inline-input.struck{text-decoration:line-through;color:var(--text3);}
-  .inline-input::placeholder{color:var(--text3);}
-  select.inline-sel{width:100%;border:none;background:transparent;font-size:13px;color:var(--text);font-family:inherit;cursor:pointer;outline:none;}
-  .del-btn{background:none;border:none;cursor:pointer;color:var(--text3);padding:4px 6px;border-radius:4px;font-size:16px;line-height:1;transition:color 0.15s,background 0.15s;}
-  .del-btn:hover{color:#D85A30;background:#FAECE7;}
-  .dist{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;}
-  .dist.near{color:var(--green);}
-  .dist.mid{color:#BA7517;}
-  .dist.far{color:#D85A30;}
-  .dist.none{color:var(--text3);}
+      /* Table */
+      .table-wrap {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+      th {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text2);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 10px 12px;
+        background: var(--bg2);
+        border-bottom: 0.5px solid var(--border);
+        text-align: left;
+      }
+      td {
+        padding: 9px 12px;
+        border-bottom: 0.5px solid var(--border);
+        vertical-align: middle;
+        font-size: 13px;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      tr.visited td {
+        background: rgba(29, 158, 117, 0.07);
+      }
+      tr:hover td {
+        background: var(--bg2);
+      }
+      tr.visited:hover td {
+        background: rgba(29, 158, 117, 0.12);
+      }
+      .col-check {
+        width: 44px;
+        text-align: center;
+      }
+      .col-name {
+        width: 155px;
+      }
+      .col-type {
+        width: 105px;
+      }
+      .col-price {
+        width: 130px;
+      }
+      .col-src {
+        width: 130px;
+      }
+      .col-dist {
+        width: 95px;
+      }
+      .col-note {
+        width: 160px;
+      }
+      .col-del {
+        width: 40px;
+      }
+      input[type="checkbox"] {
+        width: 17px;
+        height: 17px;
+        accent-color: var(--green);
+        cursor: pointer;
+      }
+      .inline-input {
+        width: 100%;
+        border: none;
+        background: transparent;
+        font-size: 13px;
+        color: var(--text);
+        font-family: inherit;
+        outline: none;
+      }
+      .inline-input.struck {
+        text-decoration: line-through;
+        color: var(--text3);
+      }
+      .inline-input::placeholder {
+        color: var(--text3);
+      }
+      select.inline-sel {
+        width: 100%;
+        border: none;
+        background: transparent;
+        font-size: 13px;
+        color: var(--text);
+        font-family: inherit;
+        cursor: pointer;
+        outline: none;
+      }
+      .del-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text3);
+        padding: 4px 6px;
+        border-radius: 4px;
+        font-size: 16px;
+        line-height: 1;
+        transition: color 0.15s, background 0.15s;
+      }
+      .del-btn:hover {
+        color: #d85a30;
+        background: #faece7;
+      }
+      .dist {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .dist.near {
+        color: var(--green);
+      }
+      .dist.mid {
+        color: #ba7517;
+      }
+      .dist.far {
+        color: #d85a30;
+      }
+      .dist.none {
+        color: var(--text3);
+      }
 
-  /* Price badge */
-  .price-badge{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px;white-space:nowrap;}
-  .price-badge.p1{background:#e6f9f2;color:#1D9E75;}
-  .price-badge.p2{background:#fff8e6;color:#BA7517;}
-  .price-badge.p3{background:#fdeee8;color:#D85A30;}
-  .price-badge.p4{background:#f3e8fd;color:#7c3aed;}
-  @media(prefers-color-scheme:dark){
-    .price-badge.p1{background:#0d3326;color:#4ecfa0;}
-    .price-badge.p2{background:#332500;color:#f5b84a;}
-    .price-badge.p3{background:#3d1a10;color:#f5826a;}
-    .price-badge.p4{background:#2a1040;color:#c084fc;}
-  }
+      /* Price badge */
+      .price-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 7px;
+        border-radius: 10px;
+        white-space: nowrap;
+      }
+      .price-badge.p1 {
+        background: #e6f9f2;
+        color: #1d9e75;
+      }
+      .price-badge.p2 {
+        background: #fff8e6;
+        color: #ba7517;
+      }
+      .price-badge.p3 {
+        background: #fdeee8;
+        color: #d85a30;
+      }
+      .price-badge.p4 {
+        background: #f3e8fd;
+        color: #7c3aed;
+      }
+      @media (prefers-color-scheme: dark) {
+        .price-badge.p1 {
+          background: #0d3326;
+          color: #4ecfa0;
+        }
+        .price-badge.p2 {
+          background: #332500;
+          color: #f5b84a;
+        }
+        .price-badge.p3 {
+          background: #3d1a10;
+          color: #f5826a;
+        }
+        .price-badge.p4 {
+          background: #2a1040;
+          color: #c084fc;
+        }
+      }
 
-  .empty-msg{text-align:center;color:var(--text3);padding:32px;font-size:13px;}
-  .empty-msg i{font-size:28px;display:block;margin-bottom:8px;}
-  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--text);color:var(--bg);font-size:13px;padding:10px 20px;border-radius:20px;opacity:0;transition:all 0.3s;z-index:999;white-space:nowrap;}
-  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+      .empty-msg {
+        text-align: center;
+        color: var(--text3);
+        padding: 32px;
+        font-size: 13px;
+      }
+      .empty-msg i {
+        font-size: 28px;
+        display: block;
+        margin-bottom: 8px;
+      }
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(60px);
+        background: var(--text);
+        color: var(--bg);
+        font-size: 13px;
+        padding: 10px 20px;
+        border-radius: 20px;
+        opacity: 0;
+        transition: all 0.3s;
+        z-index: 999;
+        white-space: nowrap;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
 
-  @media(max-width:640px){
-    table{min-width:900px;}
-    .stat-val{font-size:20px;}
-    .col-name{width:130px;}
-    .col-note{width:130px;}
-    .table-wrap::-webkit-scrollbar{height:4px;}
-    .table-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px;}
-  }
-</style>
-</head>
-<body>
-<div class="page">
-  <div class="header">
-    <h1><span class="dot"></span>Danh sách muốn đến của Bobby</h1>
-    <p id="date-lbl"></p>
-  </div>
+      @media (max-width: 640px) {
+        table {
+          min-width: 900px;
+        }
+        .stat-val {
+          font-size: 20px;
+        }
+        .col-name {
+          width: 130px;
+        }
+        .col-note {
+          width: 130px;
+        }
+        .table-wrap::-webkit-scrollbar {
+          height: 4px;
+        }
+        .table-wrap::-webkit-scrollbar-thumb {
+          background: var(--border2);
+          border-radius: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="header">
+        <h1><span class="dot"></span>Danh sách muốn đến của Bobby</h1>
+        <p id="date-lbl"></p>
+      </div>
 
-  <div class="sync-panel">
-    <span class="sync-dot loading" id="sync-dot"></span>
-    <span class="sync-lbl" id="sync-label">Đang tải dữ liệu...</span>
-    <span class="save-ind" id="save-ind"></span>
-  </div>
+      <div class="sync-panel">
+        <span class="sync-dot loading" id="sync-dot"></span>
+        <span class="sync-lbl" id="sync-label">Đang tải dữ liệu...</span>
+        <span class="save-ind" id="save-ind"></span>
+      </div>
 
-  <div class="gps-bar">
-    <i class="ti ti-current-location icon"></i>
-    <span class="gps-txt" id="gps-status">Chưa lấy vị trí — nhấn nút để tính khoảng cách</span>
-    <button class="gps-btn" onclick="getGPS()">
-      <i class="ti ti-gps" style="font-size:13px;vertical-align:-1px;margin-right:4px"></i>Lấy vị trí
-    </button>
-  </div>
+      <div class="gps-bar">
+        <i class="ti ti-current-location icon"></i>
+        <span class="gps-txt" id="gps-status"
+          >Chưa lấy vị trí — nhấn nút để tính khoảng cách</span
+        >
+        <button class="gps-btn" onclick="getGPS()">
+          <i
+            class="ti ti-gps"
+            style="font-size: 13px; vertical-align: -1px; margin-right: 4px"
+          ></i
+          >Lấy vị trí
+        </button>
+      </div>
 
-  <div class="stats">
-    <div class="stat"><div class="stat-val" id="s-total">0</div><div class="stat-lbl">Tổng địa điểm</div></div>
-    <div class="stat"><div class="stat-val" id="s-done">0</div><div class="stat-lbl">Đã đến ✓</div></div>
-    <div class="stat"><div class="stat-val" id="s-left">0</div><div class="stat-lbl">Còn lại</div></div>
-  </div>
-  <div class="progress"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-val" id="s-total">0</div>
+          <div class="stat-lbl">Tổng địa điểm</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val" id="s-done">0</div>
+          <div class="stat-lbl">Đã đến ✓</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val" id="s-left">0</div>
+          <div class="stat-lbl">Còn lại</div>
+        </div>
+      </div>
+      <div class="progress">
+        <div class="progress-fill" id="prog" style="width: 0%"></div>
+      </div>
 
-  <!-- Type / status filter -->
-  <div class="toolbar">
-    <button class="filter-btn active" onclick="setFilter('all',this)">Tất cả</button>
-    <button class="filter-btn" onclick="setFilter('food',this)">🍜 Ăn uống</button>
-    <button class="filter-btn" onclick="setFilter('place',this)">📍 Địa điểm</button>
-    <button class="filter-btn" onclick="setFilter('todo',this)">Chưa đến</button>
-    <button class="filter-btn" onclick="setFilter('done',this)">Đã đến</button>
-    <div class="spacer"></div>
-    <button class="export-btn" onclick="exportCSV()"><i class="ti ti-download" style="font-size:14px"></i> Xuất CSV</button>
-    <button class="add-btn" onclick="addRow()"><i class="ti ti-plus" style="font-size:15px"></i>Thêm</button>
-  </div>
+      <!-- Type / status filter -->
+      <div class="toolbar">
+        <button class="filter-btn active" onclick="setFilter('all',this)">
+          Tất cả
+        </button>
+        <button class="filter-btn" onclick="setFilter('food',this)">
+          🍜 Ăn uống
+        </button>
+        <button class="filter-btn" onclick="setFilter('place',this)">
+          📍 Địa điểm
+        </button>
+        <button class="filter-btn" onclick="setFilter('todo',this)">
+          Chưa đến
+        </button>
+        <button class="filter-btn" onclick="setFilter('done',this)">
+          Đã đến
+        </button>
+        <div class="spacer"></div>
+        <button class="export-btn" onclick="exportCSV()">
+          <i class="ti ti-download" style="font-size: 14px"></i> Xuất CSV
+        </button>
+        <button class="add-btn" onclick="addRow()">
+          <i class="ti ti-plus" style="font-size: 15px"></i>Thêm
+        </button>
+      </div>
 
-  <!-- Search + price filter -->
-  <div class="filter-row">
-    <div class="search-wrap">
-      <i class="ti ti-search"></i>
-      <input class="search-input" id="search-input" type="text" placeholder="Tìm tên địa điểm hoặc địa chỉ..." oninput="renderTable()">
+      <!-- Search + price filter -->
+      <div class="filter-row">
+        <div class="search-wrap">
+          <i class="ti ti-search"></i>
+          <input
+            class="search-input"
+            id="search-input"
+            type="text"
+            placeholder="Tìm tên địa điểm hoặc địa chỉ..."
+            oninput="renderTable()"
+          />
+        </div>
+        <select
+          class="price-filter-sel"
+          id="price-filter"
+          onchange="renderTable()"
+        >
+          <option value="">💰 Mọi mức giá</option>
+          <option value="p1">🟢 Dưới 100k</option>
+          <option value="p2">🟡 100k – 300k</option>
+          <option value="p3">🟠 300k – 700k</option>
+          <option value="p4">🔴 Trên 700k</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-check"><i class="ti ti-check"></i></th>
+              <th class="col-name">Tên địa điểm</th>
+              <th class="col-type">Loại</th>
+              <th class="col-price">Khoảng giá</th>
+              <th class="col-src">Nguồn gợi ý</th>
+              <th class="col-addr">Địa chỉ</th>
+              <th
+                class="col-dist"
+                onclick="toggleDistSort()"
+                style="cursor: pointer; user-select: none"
+              >
+                Khoảng cách
+                <i
+                  class="ti ti-arrows-sort"
+                  id="dist-sort-icon"
+                  style="font-size: 11px; vertical-align: -1px"
+                ></i>
+              </th>
+              <th class="col-note">Ghi chú</th>
+              <th class="col-del"></th>
+            </tr>
+          </thead>
+          <tbody id="tbl-body"></tbody>
+        </table>
+      </div>
     </div>
-    <select class="price-filter-sel" id="price-filter" onchange="renderTable()">
-      <option value="">💰 Mọi mức giá</option>
-      <option value="p1">🟢 Dưới 100k</option>
-      <option value="p2">🟡 100k – 300k</option>
-      <option value="p3">🟠 300k – 700k</option>
-      <option value="p4">🔴 Trên 700k</option>
-    </select>
-  </div>
+    <div class="toast" id="toast"></div>
 
-  <div class="table-wrap">
-    <table>
-      <thead><tr>
-        <th class="col-check"><i class="ti ti-check"></i></th>
-        <th class="col-name">Tên địa điểm</th>
-        <th class="col-type">Loại</th>
-        <th class="col-price">Khoảng giá</th>
-        <th class="col-src">Nguồn gợi ý</th>
-        <th class="col-addr">Địa chỉ</th>
-        <th class="col-dist">Khoảng cách</th>
-        <th class="col-note">Ghi chú</th>
-        <th class="col-del"></th>
-      </tr></thead>
-      <tbody id="tbl-body"></tbody>
-    </table>
-  </div>
-</div>
-<div class="toast" id="toast"></div>
+    <script>
+      document.getElementById("date-lbl").textContent =
+        new Date().toLocaleDateString("vi-VN", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
 
-<script>
-document.getElementById('date-lbl').textContent = new Date().toLocaleDateString('vi-VN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+      // ── Config ───────────────────────────────────────────────
+      const binKey =
+        "$2a$10$F/ihkvk4.BRrNOw8gtfOzOVGvhj3FYVIEQD825VPsTut92qafzB2i";
+      const binId = "6a0430f1adc21f119a928366";
+      const LOC_KEY = "travel_checklist_v1";
+      let saveTimer = null;
 
-// ── Config ───────────────────────────────────────────────
-const binKey = '$2a$10$F/ihkvk4.BRrNOw8gtfOzOVGvhj3FYVIEQD825VPsTut92qafzB2i';
-const binId  = '6a0430f1adc21f119a928366';
-const LOC_KEY = 'travel_checklist_v1';
-let saveTimer = null;
+      function setSaveInd(msg, active) {
+        const el = document.getElementById("save-ind");
+        el.textContent = msg;
+        el.className = "save-ind" + (active ? " active" : "");
+      }
 
-function setSaveInd(msg, active) {
-  const el = document.getElementById('save-ind');
-  el.textContent = msg;
-  el.className = 'save-ind' + (active ? ' active' : '');
-}
+      // ── JSONBin API ──────────────────────────────────────────
+      async function loadFromBin() {
+        document.getElementById("sync-dot").className = "sync-dot loading";
+        document.getElementById("sync-label").textContent =
+          "Đang đồng bộ dữ liệu...";
+        try {
+          const res = await fetch(
+            `https://api.jsonbin.io/v3/b/${binId}/latest`,
+            {
+              headers: { "X-Master-Key": binKey, "X-Bin-Meta": "false" },
+            }
+          );
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const data = await res.json();
+          rows = data.rows || [];
+          nextId = (data.nextId || 10) + 1;
+          localStorage.setItem(LOC_KEY, JSON.stringify({ rows, nextId }));
+          renderTable();
+          document.getElementById("sync-dot").className = "sync-dot ok";
+          document.getElementById("sync-label").textContent =
+            "Đã đồng bộ đám mây ✓";
+        } catch (e) {
+          document.getElementById("sync-dot").className = "sync-dot err";
+          document.getElementById("sync-label").textContent =
+            "Lỗi kết nối mạng (dùng tạm dữ liệu cũ)";
+          toast("Lỗi tải dữ liệu: " + e.message);
+        }
+      }
 
-// ── JSONBin API ──────────────────────────────────────────
-async function loadFromBin() {
-  document.getElementById('sync-dot').className = 'sync-dot loading';
-  document.getElementById('sync-label').textContent = 'Đang đồng bộ dữ liệu...';
-  try {
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
-      headers: { 'X-Master-Key': binKey, 'X-Bin-Meta': 'false' }
-    });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    rows   = data.rows   || [];
-    nextId = (data.nextId || 10) + 1;
-    localStorage.setItem(LOC_KEY, JSON.stringify({rows, nextId}));
-    renderTable();
-    document.getElementById('sync-dot').className = 'sync-dot ok';
-    document.getElementById('sync-label').textContent = 'Đã đồng bộ đám mây ✓';
-  } catch(e) {
-    document.getElementById('sync-dot').className = 'sync-dot err';
-    document.getElementById('sync-label').textContent = 'Lỗi kết nối mạng (dùng tạm dữ liệu cũ)';
-    toast('Lỗi tải dữ liệu: ' + e.message);
-  }
-}
+      async function saveToBin() {
+        setSaveInd("↑ Đang lưu lên cloud...", true);
+        try {
+          const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Master-Key": binKey,
+            },
+            body: JSON.stringify({ rows, nextId }),
+          });
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          setSaveInd("✓ Đã lưu", false);
+          setTimeout(() => setSaveInd("", false), 2000);
+        } catch (e) {
+          setSaveInd("✗ Lưu thất bại", false);
+          toast("Không lưu được: " + e.message);
+        }
+      }
 
-async function saveToBin() {
-  setSaveInd('↑ Đang lưu lên cloud...', true);
-  try {
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': binKey },
-      body: JSON.stringify({rows, nextId})
-    });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    setSaveInd('✓ Đã lưu', false);
-    setTimeout(() => setSaveInd('', false), 2000);
-  } catch(e) {
-    setSaveInd('✗ Lưu thất bại', false);
-    toast('Không lưu được: ' + e.message);
-  }
-}
+      // ── Data ─────────────────────────────────────────────────
+      let rows = [],
+        nextId = 100,
+        filter = "all",
+        distSort = false;
+      let userLat = null,
+        userLng = null;
 
-// ── Data ─────────────────────────────────────────────────
-let rows = [], nextId = 100, filter = 'all';
-let userLat = null, userLng = null;
+      const srcLabel = {
+        michelin: "Michelin Guide",
+        tiktok: "TikTok",
+        klook: "Klook",
+        google: "Google Maps",
+        other: "Khác",
+      };
 
-const srcLabel = {michelin:'Michelin Guide',tiktok:'TikTok',klook:'Klook',google:'Google Maps',other:'Khác'};
+      const priceMeta = {
+        "": { label: "—", cls: "", icon: "" },
+        p1: { label: "Dưới 100k", cls: "p1", icon: "🟢" },
+        p2: { label: "100k – 300k", cls: "p2", icon: "🟡" },
+        p3: { label: "300k – 700k", cls: "p3", icon: "🟠" },
+        p4: { label: "Trên 700k", cls: "p4", icon: "🔴" },
+      };
 
-const priceMeta = {
-  '':   {label:'—',            cls:'',   icon:''},
-  'p1': {label:'Dưới 100k',   cls:'p1', icon:'🟢'},
-  'p2': {label:'100k – 300k', cls:'p2', icon:'🟡'},
-  'p3': {label:'300k – 700k', cls:'p3', icon:'🟠'},
-  'p4': {label:'Trên 700k',   cls:'p4', icon:'🔴'},
-};
+      function localLoad() {
+        try {
+          const d = JSON.parse(localStorage.getItem(LOC_KEY) || "null");
+          if (d) {
+            nextId = (d.nextId || 10) + 1;
+            return d.rows || [];
+          }
+        } catch (e) {}
+        return [];
+      }
 
-function localLoad() {
-  try {
-    const d = JSON.parse(localStorage.getItem(LOC_KEY) || 'null');
-    if (d) { nextId = (d.nextId||10)+1; return d.rows||[]; }
-  } catch(e) {}
-  return [];
-}
+      function save() {
+        localStorage.setItem(LOC_KEY, JSON.stringify({ rows, nextId }));
+        clearTimeout(saveTimer);
+        setSaveInd("…", false);
+        saveTimer = setTimeout(saveToBin, 1200);
+      }
 
-function save() {
-  localStorage.setItem(LOC_KEY, JSON.stringify({rows, nextId}));
-  clearTimeout(saveTimer);
-  setSaveInd('…', false);
-  saveTimer = setTimeout(saveToBin, 1200);
-}
+      rows = localLoad();
 
-rows = localLoad();
+      // ── Helpers ──────────────────────────────────────────────
+      function toast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 2400);
+      }
+      function esc(s) {
+        return (s || "")
+          .replace(/&/g, "&amp;")
+          .replace(/"/g, "&quot;")
+          .replace(/</g, "&lt;");
+      }
+      function deg2rad(d) {
+        return (d * Math.PI) / 180;
+      }
+      function calcDist(a, b, c, d) {
+        const R = 6371,
+          dL = deg2rad(c - a),
+          dG = deg2rad(d - b);
+        const x =
+          Math.sin(dL / 2) ** 2 +
+          Math.cos(deg2rad(a)) * Math.cos(deg2rad(c)) * Math.sin(dG / 2) ** 2;
+        return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
+      }
+      function fmtDist(k) {
+        return k < 1 ? Math.round(k * 1000) + "m" : k.toFixed(1) + "km";
+      }
+      function distClass(k) {
+        return k < 2 ? "near" : k < 10 ? "mid" : "far";
+      }
+      function distIcon(c) {
+        return c === "near"
+          ? "ti-walk"
+          : c === "mid"
+          ? "ti-motorbike"
+          : "ti-car";
+      }
 
-// ── Helpers ──────────────────────────────────────────────
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2400);
-}
-function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
-function deg2rad(d) { return d*Math.PI/180; }
-function calcDist(a,b,c,d) {
-  const R=6371,dL=deg2rad(c-a),dG=deg2rad(d-b);
-  const x=Math.sin(dL/2)**2+Math.cos(deg2rad(a))*Math.cos(deg2rad(c))*Math.sin(dG/2)**2;
-  return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
-}
-function fmtDist(k) { return k<1?Math.round(k*1000)+'m':k.toFixed(1)+'km'; }
-function distClass(k) { return k<2?'near':k<10?'mid':'far'; }
-function distIcon(c) { return c==='near'?'ti-walk':c==='mid'?'ti-motorbike':'ti-car'; }
+      async function geocode(addr) {
+        if (!addr || !addr.trim()) return null;
+        try {
+          const r = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+              addr
+            )}&limit=1`,
+            { headers: { "Accept-Language": "vi" } }
+          );
+          const d = await r.json();
+          if (d && d[0])
+            return { lat: parseFloat(d[0].lat), lng: parseFloat(d[0].lon) };
+        } catch (e) {}
+        return null;
+      }
 
-async function geocode(addr) {
-  if (!addr||!addr.trim()) return null;
-  try {
-    const r = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addr)}&limit=1`,{headers:{'Accept-Language':'vi'}});
-    const d = await r.json();
-    if (d&&d[0]) return {lat:parseFloat(d[0].lat),lng:parseFloat(d[0].lon)};
-  } catch(e) {}
-  return null;
-}
+      function getGPS() {
+        const st = document.getElementById("gps-status");
+        st.textContent = "Đang lấy vị trí...";
+        if (!navigator.geolocation) {
+          st.textContent = "Không hỗ trợ GPS";
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            userLat = pos.coords.latitude;
+            userLng = pos.coords.longitude;
+            st.textContent = `📍 ${userLat.toFixed(4)}, ${userLng.toFixed(
+              4
+            )} — đang tính...`;
+            geocodeAll().then(() => {
+              st.textContent = `📍 ${userLat.toFixed(4)}, ${userLng.toFixed(
+                4
+              )} — đã cập nhật`;
+              renderTable();
+            });
+          },
+          () => {
+            st.textContent = "Không thể lấy vị trí. Hãy cho phép GPS.";
+          }
+        );
+      }
 
-function getGPS() {
-  const st = document.getElementById('gps-status');
-  st.textContent = 'Đang lấy vị trí...';
-  if (!navigator.geolocation) { st.textContent='Không hỗ trợ GPS'; return; }
-  navigator.geolocation.getCurrentPosition(pos => {
-    userLat=pos.coords.latitude; userLng=pos.coords.longitude;
-    st.textContent=`📍 ${userLat.toFixed(4)}, ${userLng.toFixed(4)} — đang tính...`;
-    geocodeAll().then(()=>{ st.textContent=`📍 ${userLat.toFixed(4)}, ${userLng.toFixed(4)} — đã cập nhật`; renderTable(); });
-  }, ()=>{ st.textContent='Không thể lấy vị trí. Hãy cho phép GPS.'; });
-}
+      async function geocodeAll() {
+        for (const r of rows) {
+          if (!r.lat && r.addr) {
+            const c = await geocode(r.addr);
+            if (c) {
+              r.lat = c.lat;
+              r.lng = c.lng;
+            }
+          }
+        }
+        save();
+      }
 
-async function geocodeAll() {
-  for (const r of rows) {
-    if (!r.lat&&r.addr) { const c=await geocode(r.addr); if(c){r.lat=c.lat;r.lng=c.lng;} }
-  }
-  save();
-}
+      function geocodeRow(id) {
+        const r = rows.find((r) => r.id === id);
+        if (!r || !r.addr) return;
+        const cell = document.getElementById("dist-" + id);
+        if (cell)
+          cell.innerHTML =
+            '<span style="color:var(--text3);font-size:12px">Đang tìm...</span>';
+        geocode(r.addr).then((c) => {
+          if (c) {
+            r.lat = c.lat;
+            r.lng = c.lng;
+            save();
+            renderTable();
+            toast("Đã tra tọa độ");
+          } else if (cell)
+            cell.innerHTML =
+              '<span style="color:#D85A30;font-size:12px">Không tìm thấy</span>';
+        });
+      }
 
-function geocodeRow(id) {
-  const r=rows.find(r=>r.id===id); if(!r||!r.addr) return;
-  const cell=document.getElementById('dist-'+id);
-  if(cell) cell.innerHTML='<span style="color:var(--text3);font-size:12px">Đang tìm...</span>';
-  geocode(r.addr).then(c=>{
-    if(c){r.lat=c.lat;r.lng=c.lng;save();renderTable();toast('Đã tra tọa độ');}
-    else if(cell) cell.innerHTML='<span style="color:#D85A30;font-size:12px">Không tìm thấy</span>';
-  });
-}
+      function setFilter(f, btn) {
+        filter = f;
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderTable();
+      }
 
-function setFilter(f,btn) {
-  filter=f;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active'); renderTable();
-}
+      function addRow() {
+        rows.push({
+          id: nextId++,
+          name: "",
+          type: "food",
+          price: "",
+          src: "google",
+          addr: "",
+          note: "",
+          done: false,
+          lat: null,
+          lng: null,
+        });
+        save();
+        renderTable();
+        setTimeout(() => {
+          const i = document.querySelectorAll(".name-input");
+          if (i.length) i[i.length - 1].focus();
+        }, 50);
+      }
 
-function addRow() {
-  rows.push({id:nextId++,name:'',type:'food',price:'',src:'google',addr:'',note:'',done:false,lat:null,lng:null});
-  save(); renderTable();
-  setTimeout(()=>{const i=document.querySelectorAll('.name-input');if(i.length)i[i.length-1].focus();},50);
-}
+      function deleteRow(id) {
+        if (!confirm("Xóa địa điểm này?")) return;
+        rows = rows.filter((r) => r.id !== id);
+        save();
+        renderTable();
+        toast("Đã xóa");
+      }
 
-function deleteRow(id) {
-  if(!confirm('Xóa địa điểm này?')) return;
-  rows=rows.filter(r=>r.id!==id); save(); renderTable(); toast('Đã xóa');
-}
+      function updateField(id, field, val) {
+        const r = rows.find((r) => r.id === id);
+        if (!r) return;
+        r[field] = val;
+        if (field === "addr") {
+          r.lat = null;
+          r.lng = null;
+        }
+        save();
+        updateStats();
+      }
 
-function updateField(id,field,val) {
-  const r=rows.find(r=>r.id===id); if(!r) return;
-  r[field]=val;
-  if(field==='addr'){r.lat=null;r.lng=null;}
-  save(); updateStats();
-}
+      function toggleDone(id) {
+        const r = rows.find((r) => r.id === id);
+        if (r) {
+          r.done = !r.done;
+          save();
+          renderTable();
+          toast(r.done ? "✓ Đã đánh dấu đến rồi!" : "Bỏ đánh dấu");
+        }
+      }
 
-function toggleDone(id) {
-  const r=rows.find(r=>r.id===id);
-  if(r){r.done=!r.done;save();renderTable();toast(r.done?'✓ Đã đánh dấu đến rồi!':'Bỏ đánh dấu');}
-}
+      function updateStats() {
+        const total = rows.length,
+          done = rows.filter((r) => r.done).length;
+        document.getElementById("s-total").textContent = total;
+        document.getElementById("s-done").textContent = done;
+        document.getElementById("s-left").textContent = total - done;
+        document.getElementById("prog").style.width =
+          (total ? Math.round((done / total) * 100) : 0) + "%";
+      }
 
-function updateStats() {
-  const total=rows.length, done=rows.filter(r=>r.done).length;
-  document.getElementById('s-total').textContent=total;
-  document.getElementById('s-done').textContent=done;
-  document.getElementById('s-left').textContent=total-done;
-  document.getElementById('prog').style.width=(total?Math.round(done/total*100):0)+'%';
-}
+      function exportCSV() {
+        const h = [
+          "Tên",
+          "Loại",
+          "Khoảng giá",
+          "Nguồn gợi ý",
+          "Địa chỉ",
+          "Ghi chú",
+          "Đã đến",
+        ];
+        const b = rows.map((r) => [
+          r.name,
+          r.type === "food" ? "Ăn uống" : "Địa điểm",
+          priceMeta[r.price || ""]?.label || "",
+          srcLabel[r.src] || r.src,
+          r.addr,
+          r.note || "",
+          r.done ? "Rồi" : "Chưa",
+        ]);
+        const csv = [h, ...b]
+          .map((row) =>
+            row.map((c) => `"${(c || "").replace(/"/g, '""')}"`).join(",")
+          )
+          .join("\n");
+        const blob = new Blob(["\uFEFF" + csv], {
+          type: "text/csv;charset=utf-8",
+        });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download =
+          "checklist-" + new Date().toISOString().slice(0, 10) + ".csv";
+        a.click();
+        toast("Đã xuất CSV");
+      }
 
-function exportCSV() {
-  const h=['Tên','Loại','Khoảng giá','Nguồn gợi ý','Địa chỉ','Ghi chú','Đã đến'];
-  const b=rows.map(r=>[
-    r.name,
-    r.type==='food'?'Ăn uống':'Địa điểm',
-    priceMeta[r.price||'']?.label||'',
-    srcLabel[r.src]||r.src,
-    r.addr,
-    r.note||'',
-    r.done?'Rồi':'Chưa'
-  ]);
-  const csv=[h,...b].map(row=>row.map(c=>`"${(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download='checklist-'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
-  toast('Đã xuất CSV');
-}
+      function toggleDistSort() {
+        distSort = !distSort;
+        const icon = document.getElementById("dist-sort-icon");
+        icon.className = distSort
+          ? "ti ti-sort-ascending"
+          : "ti ti-arrows-sort";
+        icon.style.color = distSort ? "var(--green)" : "";
+        renderTable();
+      }
 
-function renderTable() {
-  const searchQ = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
-  const priceQ  = document.getElementById('price-filter')?.value || '';
+      function renderTable() {
+        const searchQ = (document.getElementById("search-input")?.value || "")
+          .toLowerCase()
+          .trim();
+        const priceQ = document.getElementById("price-filter")?.value || "";
 
-  let visible = rows;
+        let visible = rows;
 
-  // Type / status filter
-  if(filter==='food')  visible = visible.filter(r=>r.type==='food');
-  else if(filter==='place') visible = visible.filter(r=>r.type==='place');
-  else if(filter==='todo')  visible = visible.filter(r=>!r.done);
-  else if(filter==='done')  visible = visible.filter(r=>r.done);
+        // Type / status filter
+        if (filter === "food")
+          visible = visible.filter((r) => r.type === "food");
+        else if (filter === "place")
+          visible = visible.filter((r) => r.type === "place");
+        else if (filter === "todo") visible = visible.filter((r) => !r.done);
+        else if (filter === "done") visible = visible.filter((r) => r.done);
 
-  // Search filter
-  if(searchQ) {
-    visible = visible.filter(r =>
-      (r.name||'').toLowerCase().includes(searchQ) ||
-      (r.addr||'').toLowerCase().includes(searchQ)
-    );
-  }
+        // Search filter
+        if (searchQ) {
+          visible = visible.filter(
+            (r) =>
+              (r.name || "").toLowerCase().includes(searchQ) ||
+              (r.addr || "").toLowerCase().includes(searchQ)
+          );
+        }
 
-  // Price filter
-  if(priceQ) {
-    visible = visible.filter(r => (r.price||'') === priceQ);
-  }
+        // Price filter
+        if (priceQ) {
+          visible = visible.filter((r) => (r.price || "") === priceQ);
+        }
 
-  const tbody = document.getElementById('tbl-body');
-  if(!visible.length){
-    tbody.innerHTML=`<tr><td colspan="9" class="empty-msg"><i class="ti ti-mood-empty"></i>Không tìm thấy địa điểm nào</td></tr>`;
-    updateStats(); return;
-  }
+        if (distSort && userLat !== null) {
+          visible = [...visible].sort((a, b) => {
+            const da = a.lat
+              ? calcDist(userLat, userLng, a.lat, a.lng)
+              : Infinity;
+            const db = b.lat
+              ? calcDist(userLat, userLng, b.lat, b.lng)
+              : Infinity;
+            return da - db;
+          });
+        }
 
-  tbody.innerHTML = visible.map(r => {
-    // Distance cell
-    let dH='';
-    if(userLat!==null&&r.lat){
-      const k=calcDist(userLat,userLng,r.lat,r.lng),c=distClass(k);
-      dH=`<span class="dist ${c}"><i class="ti ${distIcon(c)}" style="font-size:13px"></i>${fmtDist(k)}</span>`;
-    } else if(r.addr&&r.addr.trim()){
-      dH=`<span class="dist none" style="cursor:pointer" onclick="geocodeRow(${r.id})"><i class="ti ti-map-search" style="font-size:13px"></i>Tra địa chỉ</span>`;
-    }
+        const tbody = document.getElementById("tbl-body");
+        if (!visible.length) {
+          tbody.innerHTML = `<tr><td colspan="9" class="empty-msg"><i class="ti ti-mood-empty"></i>Không tìm thấy địa điểm nào</td></tr>`;
+          updateStats();
+          return;
+        }
 
-    // Price cell
-    const pm = priceMeta[r.price||''] || priceMeta[''];
-    const priceBadge = pm.cls
-      ? `<span class="price-badge ${pm.cls}">${pm.icon} ${pm.label}</span>`
-      : `<span style="color:var(--text3);font-size:12px">—</span>`;
+        tbody.innerHTML = visible
+          .map((r) => {
+            // Distance cell
+            let dH = "";
+            if (userLat !== null && r.lat) {
+              const k = calcDist(userLat, userLng, r.lat, r.lng),
+                c = distClass(k);
+              dH = `<span class="dist ${c}"><i class="ti ${distIcon(
+                c
+              )}" style="font-size:13px"></i>${fmtDist(k)}</span>`;
+            } else if (r.addr && r.addr.trim()) {
+              dH = `<span class="dist none" style="cursor:pointer" onclick="geocodeRow(${r.id})"><i class="ti ti-map-search" style="font-size:13px"></i>Tra địa chỉ</span>`;
+            }
 
-    return `<tr class="${r.done?'visited':''}" id="row-${r.id}">
-      <td class="col-check" style="text-align:center"><input type="checkbox" ${r.done?'checked':''} onchange="toggleDone(${r.id})"></td>
-      <td class="col-name"><input class="inline-input name-input ${r.done?'struck':''}" value="${esc(r.name)}" placeholder="Tên địa điểm..." oninput="updateField(${r.id},'name',this.value)" onblur="renderTable()"></td>
+            // Price cell
+            const pm = priceMeta[r.price || ""] || priceMeta[""];
+            const priceBadge = pm.cls
+              ? `<span class="price-badge ${pm.cls}">${pm.icon} ${pm.label}</span>`
+              : `<span style="color:var(--text3);font-size:12px">—</span>`;
+
+            return `<tr class="${r.done ? "visited" : ""}" id="row-${r.id}">
+      <td class="col-check" style="text-align:center"><input type="checkbox" ${
+        r.done ? "checked" : ""
+      } onchange="toggleDone(${r.id})"></td>
+      <td class="col-name"><input class="inline-input name-input ${
+        r.done ? "struck" : ""
+      }" value="${esc(
+              r.name
+            )}" placeholder="Tên địa điểm..." oninput="updateField(${
+              r.id
+            },'name',this.value)" onblur="renderTable()"></td>
       <td class="col-type">
-        <select class="inline-sel" onchange="updateField(${r.id},'type',this.value)">
-          <option value="food"  ${r.type==='food' ?'selected':''}>🍜 Ăn uống</option>
-          <option value="place" ${r.type==='place'?'selected':''}>📍 Địa điểm</option>
+        <select class="inline-sel" onchange="updateField(${
+          r.id
+        },'type',this.value)">
+          <option value="food"  ${
+            r.type === "food" ? "selected" : ""
+          }>🍜 Ăn uống</option>
+          <option value="place" ${
+            r.type === "place" ? "selected" : ""
+          }>📍 Địa điểm</option>
         </select>
       </td>
       <td class="col-price">
-        <select class="inline-sel" onchange="updateField(${r.id},'price',this.value);renderTable()">
-          <option value=""  ${(r.price||'')=== ''  ?'selected':''}>— Chọn mức giá</option>
-          <option value="p1" ${r.price==='p1'?'selected':''}>🟢 Dưới 100k</option>
-          <option value="p2" ${r.price==='p2'?'selected':''}>🟡 100k – 300k</option>
-          <option value="p3" ${r.price==='p3'?'selected':''}>🟠 300k – 700k</option>
-          <option value="p4" ${r.price==='p4'?'selected':''}>🔴 Trên 700k</option>
+        <select class="inline-sel" onchange="updateField(${
+          r.id
+        },'price',this.value);renderTable()">
+          <option value=""  ${
+            (r.price || "") === "" ? "selected" : ""
+          }>— Chọn mức giá</option>
+          <option value="p1" ${
+            r.price === "p1" ? "selected" : ""
+          }>🟢 Dưới 100k</option>
+          <option value="p2" ${
+            r.price === "p2" ? "selected" : ""
+          }>🟡 100k – 300k</option>
+          <option value="p3" ${
+            r.price === "p3" ? "selected" : ""
+          }>🟠 300k – 700k</option>
+          <option value="p4" ${
+            r.price === "p4" ? "selected" : ""
+          }>🔴 Trên 700k</option>
         </select>
       </td>
       <td class="col-src">
-        <select class="inline-sel" onchange="updateField(${r.id},'src',this.value);renderTable()">
-          <option value="michelin" ${r.src==='michelin'?'selected':''}>Michelin Guide</option>
-          <option value="tiktok"   ${r.src==='tiktok'  ?'selected':''}>TikTok</option>
-          <option value="klook"    ${r.src==='klook'   ?'selected':''}>Klook</option>
-          <option value="google"   ${r.src==='google'  ?'selected':''}>Google Maps</option>
-          <option value="other"    ${r.src==='other'   ?'selected':''}>Khác</option>
+        <select class="inline-sel" onchange="updateField(${
+          r.id
+        },'src',this.value);renderTable()">
+          <option value="michelin" ${
+            r.src === "michelin" ? "selected" : ""
+          }>Michelin Guide</option>
+          <option value="tiktok"   ${
+            r.src === "tiktok" ? "selected" : ""
+          }>TikTok</option>
+          <option value="klook"    ${
+            r.src === "klook" ? "selected" : ""
+          }>Klook</option>
+          <option value="google"   ${
+            r.src === "google" ? "selected" : ""
+          }>Google Maps</option>
+          <option value="other"    ${
+            r.src === "other" ? "selected" : ""
+          }>Khác</option>
         </select>
       </td>
-      <td class="col-addr"><input class="inline-input" value="${esc(r.addr)}" placeholder="Nhập địa chỉ..." oninput="updateField(${r.id},'addr',this.value)"></td>
+      <td class="col-addr"><input class="inline-input" value="${esc(
+        r.addr
+      )}" placeholder="Nhập địa chỉ..." oninput="updateField(${
+              r.id
+            },'addr',this.value)"></td>
       <td class="col-dist" id="dist-${r.id}">${dH}</td>
-      <td class="col-note"><input class="inline-input" value="${esc(r.note||'')}" placeholder="Ghi chú..." oninput="updateField(${r.id},'note',this.value)"></td>
-      <td class="col-del"><button class="del-btn" onclick="deleteRow(${r.id})"><i class="ti ti-trash"></i></button></td>
+      <td class="col-note"><input class="inline-input" value="${esc(
+        r.note || ""
+      )}" placeholder="Ghi chú..." oninput="updateField(${
+              r.id
+            },'note',this.value)"></td>
+      <td class="col-del"><button class="del-btn" onclick="deleteRow(${
+        r.id
+      })"><i class="ti ti-trash"></i></button></td>
     </tr>`;
-  }).join('');
-  updateStats();
-}
+          })
+          .join("");
+        updateStats();
+      }
 
-// ── Init ─────────────────────────────────────────────────
-renderTable();
-loadFromBin();
-</script>
-</body>
+      // ── Init ─────────────────────────────────────────────────
+      renderTable();
+      loadFromBin();
+    </script>
+  </body>
 </html>
